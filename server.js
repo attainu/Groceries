@@ -2,7 +2,7 @@ const express = require("express");
 const methodOverride = require("method-override");
 require("./db");
 const path = require('path');
-const customerAPIRoutes = require("./routes/apiRoutes/customerApiRoutes");
+const customerAPIRoutes = require("./routes/customerApiRoutes");
 
 
 const app = express();

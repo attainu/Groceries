@@ -1,5 +1,5 @@
 
-var Customer = require("../../models/Customer");
+var Customer = require("../models/Customer");
 
 module.exports = {
   async registerCustomer(req, res) {

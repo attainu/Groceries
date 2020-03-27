@@ -1,7 +1,7 @@
 // Import the express module
 var express = require("express");
-var authenticate = require("../../middleware/authenticate");
-var customerApiControllers = require("../../controllers/apiControllers/customerApiControllers");
+var authenticate = require("../middleware/authenticate");
+var customerApiControllers = require("../controllers/customerApiControllers");
 
 // Instance of a router is created with express.Router()
 var router = express.Router();
