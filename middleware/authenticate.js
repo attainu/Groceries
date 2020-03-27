@@ -6,7 +6,7 @@ var passwords = require('../passwords/passwords');
 
 var privateKey = passwords.privateKey;
 module.exports = async (req, res, next) => {
-  // Check whether customer has given back the token
+  
   try {
 
     var authToken = req.header('Authorization');

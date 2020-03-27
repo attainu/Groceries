@@ -28,12 +28,12 @@ const customerSchema = new Schema(
       type: String, 
     },
 
-    // products: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "product"
-    //   }
-    // ]
+    address: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "address"
+      }
+    ]
   },
   { timestamps: true }
 );

@@ -3,7 +3,7 @@ const methodOverride = require("method-override");
 require("./db");
 const path = require('path');
 const customerAPIRoutes = require("./routes/customerApiRoutes");
-
+const addressRoutes = require("./routes/addressRoutes");
 
 const app = express();
 app.use(express.json());
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("method"));
 
 app.use(customerAPIRoutes);
-
+app.use(addressRoutes);
 
 app.get("/", function (req, res) {
   res.status(200).send("welcome")

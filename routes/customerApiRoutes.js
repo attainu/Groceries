@@ -13,4 +13,6 @@ router.post("/customers/login", customerApiControllers.loginCustomer);
 router.delete("/customers/logout",authenticate, customerApiControllers.logOutCustomer);
 router.delete("/customers/deactivate",authenticate, customerApiControllers.deactivateCustomer);
 
+
+router.get("/profile",authenticate, customerApiControllers.showProfile);
 module.exports = router;
