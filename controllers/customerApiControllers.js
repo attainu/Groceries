@@ -4,7 +4,18 @@ var Customer = require("../models/Customer");
 module.exports = {
   async registerCustomer(req, res) {
     try {
-      const customer = await Customer.create({ ...req.body });
+      const{name ,email,password }=req.body
+      if (!email || !name || !password) {
+        return res
+          .status(400)
+          .send({ statusCode: 400, message: "Bad requestsss" });
+      }
+      const customer = await Customer.create({
+        email,
+        name,
+        password,
+        isThirdPartyUser: false
+      });
       const newCustomer = await customer.generateAuthToken();
       await newCustomer.save();
       res.status(200).json({status:200,message:`${newCustomer.name} register successfully`,customer:newCustomer});
@@ -87,7 +98,21 @@ module.exports = {
       res.send(err.message);
     }
 
-  }
+  },
+  
+  async loginWithGoogleUser(req, res) {
+    const customer = req.user;
+    console.log(customer)
+    const customerT = await customer.generateAuthToken();
+    await customerT.save();
+    const accessToken=customerT.accessToken;
+    res.cookie("accessToken", accessToken, {
+      expires: new Date(Date.now() + 100 * 60 * 60 * 24),
+      httpOnly: true,
+      sameSite: "none"
+    });
+    res.redirect("http://localhost:1234/");
+  },
 
 
 };

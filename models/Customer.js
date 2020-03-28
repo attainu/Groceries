@@ -21,8 +21,14 @@ const customerSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function() {
+        return !this.isThirdPartyUser;
+      },
       trim: true
+    },
+    isThirdPartyUser: {
+      type: Boolean,
+      required: true
     },
     accessToken: {
       type: String, 
@@ -76,6 +82,14 @@ customerSchema.pre("save", function(next) {
   
 });
 
+customerSchema.methods.toJSON = function() {
+  const customer = this.toObject();
+  delete customer.password;
+  delete customer.accessToken;
+  delete customer.__v;
+  // Super important
+  return customer;
+};
 
 customerSchema.methods.generateAuthToken=function(){
   const customer=this;
