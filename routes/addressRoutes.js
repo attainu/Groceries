@@ -6,9 +6,9 @@ var addressControllers = require("../controllers/addressController");
 var router = express.Router();
 
 
-router.post("/addAddress",authenticate, addressControllers.addAddress);
-router.delete("/deleteAddress/:addressId",authenticate, addressControllers.deleteAddress);
-router.patch("/updateAddress/:addressId",authenticate, addressControllers.updateAddress);
+router.post("/addAddress",authenticate.customerAuthenticate, addressControllers.addAddress);
+router.delete("/deleteAddress/:addressId",authenticate.customerAuthenticate, addressControllers.deleteAddress);
+router.patch("/updateAddress/:addressId",authenticate.customerAuthenticate, addressControllers.updateAddress);
 
 
 module.exports = router;

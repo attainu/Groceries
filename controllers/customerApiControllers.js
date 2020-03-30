@@ -63,7 +63,7 @@ module.exports = {
 
 
   async logOutCustomer(req, res) {
-    const customer = req.customer;
+    const customer = req.user;
     const customerId = customer.id;
     customer.accessToken = null;
     const newCustomer = customer;

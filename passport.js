@@ -18,7 +18,7 @@ passport.use(
   new JWTStrategy(optJwt, async ({ customerId }, done) => {
     try {
       const customer = await Customer.findOne({_id:customerId});
-      console.log(customer)
+      console.log(customer,"passport")
       if (!customer) return done(null, false, { message: "Incorrect Credentials" });
        if(customer){
          return done(null, customer);
