@@ -1,6 +1,7 @@
 
 var express = require("express");
 var authenticate = require("../middleware/authenticate");
+var admin = require("../middleware/admin");
 //const passport = require("passport");
 var storeStaffControllers = require("../controllers/storeStaffController");
 
@@ -16,5 +17,7 @@ router.delete("/storeStaffs/deactivate",authenticate.storeStaffAuthenticate, sto
 
 
 //router.get("/profile",authenticate, storeStaffControllers.showProfile);
+router.get("storeStaffs/member",authenticate.storeStaffAuthenticate,admin,getAllStoreStaff);
+router.delete("storeStaffs/member/:storeStaffId",authenticate.storeStaffAuthenticate,admin,deleteStoreStaffById);
 
 module.exports = router;

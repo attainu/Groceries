@@ -57,7 +57,7 @@ module.exports = {
             const cart= await Cart.findOne({owner:owner})
             if (!cart)return res.status(400).json({ statusCode: 400, message: 'Invalid cart Id' })
             console.log(cart)
-            cartJson = await cart.populate('customer', ['name']).execPopulate()
+            cartJson = await cart.populate('owner', ['name']).execPopulate()
             res.status(201).json({ statusCode: 201, cartJson })	
         } 
         catch (err) {

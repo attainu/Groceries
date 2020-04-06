@@ -1,12 +1,11 @@
 const express = require('express')
 const authenticate = require('../middleware/authenticate')
-const admin = require('../middleware/admin')
 var router = express.Router();
 const categoryController = require('../controllers/categoryController')
 
 router.get('/category',categoryController.allCategories)
 
-router.post('/category',categoryController.createCategory)
+router.post('/category',authenticate.storeStaffAuthenticate, categoryController.createCategory)
 
 router.get('/category/:categoryId', categoryController.categoryById)
 

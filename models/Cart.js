@@ -4,14 +4,14 @@ const cartSchema = new Schema({
     owner: {type: Schema.Types.ObjectId, ref: 'customer'},
 	total: {type: Number, default: 0},
 	items: [{
-		item: {type: Schema.Types.ObjectId, ref: 'Product'},
+		item: {type: Schema.Types.ObjectId, ref: 'product'},
 		quantity: {type: Number, default: 1},
 		price: {type: Number, default: 0}
     }],
     coupon: {
-        type: { type: String },
-        name: { type: String },
-        value: { type: Number }
+        code: { type: String },
+		value: { type: Number },
+		type:{type:String}
       },
 },
 	{ timestamps: true }

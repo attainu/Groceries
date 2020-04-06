@@ -9,12 +9,14 @@ var router = express.Router();
 router.post("/customers/register", customerApiControllers.registerCustomer);
 
 router.post("/customers/login", customerApiControllers.loginCustomer);
+router.post("/customers/changePassword",authenticate.customerAuthenticate, customerApiControllers.CustomerCangePassword);
 
 router.delete("/customers/logout",passport.authenticate("jwt", { session: false }), customerApiControllers.logOutCustomer);
 router.delete("/customers/deactivate",authenticate.customerAuthenticate, customerApiControllers.deactivateCustomer);
 
 
 router.get("/profile",authenticate.customerAuthenticate, customerApiControllers.showProfile);
+router.get("/confirm/:confirmToken",customerApiControllers.renderConfirmEmail);
 
 
 router.get(

@@ -16,9 +16,9 @@ router.delete('/product/:productId', authenticate.storeStaffAuthenticate,product
 //GET /products/ fetching all prodects 
 router.get('/product',productControllers.getAllProducts)
 //GET /products/category/:categoryId fetching all products by category
-router.get('/product/cid/:categoryId',productControllers.getAllProductsByCategory)
+router.get('/product/categoryId/:categoryId',productControllers.getAllProductsByCategory)
 // GET /products/:productId fetching product by product id
-router.get('/product/pid/:productId',productControllers.getProductById)
+router.get('/product/productId/:productId',productControllers.getProductById)
 
 
 module.exports = router

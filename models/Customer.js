@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const passwords = require('../passwords/passwords')
+const sendEmail = require("../utils/sendEmail");
 const privateKey = passwords.privateKey
 
 const Schema = mongoose.Schema;
@@ -32,6 +33,10 @@ const customerSchema = new Schema(
     },
     accessToken: {
       type: String, 
+    },
+   mailConfirmed: {
+      type: Boolean,
+      default:false
     },
 
     address: [
@@ -91,22 +96,38 @@ customerSchema.methods.toJSON = function() {
   return customer;
 };
 
-customerSchema.methods.generateAuthToken=function(){
-  const customer=this;
-  console.log(customer);
-  const id=customer.id
-  return new Promise(function(resolve,reject){
-   jwt.sign({customerId:id},privateKey,{ expiresIn: 60 * 60 * 12 },function(err,token){
-
-    console.log(token);
-    customer.accessToken=token;
-    console.log(customer)
+customerSchema.methods={
+  generateAuthTokenConfirmation: async function (){
+    const customer=this;
+    console.log(customer);
+    const id=customer.id
    
-    resolve(customer);
+ const token=await jwt.sign({customerId:id},privateKey,{ expiresIn: "12h"})
+  
+      console.log(token);
+      customer.accessToken=token;
+      console.log(customer)
+      await sendEmail(customer.email, token);
+      return customer
+      
     
-    })
-  // }
-   })
+    },
+  generateAuthToken: async function (){
+    const customer=this;
+    console.log(customer);
+    const id=customer.id
+   
+ const token=await jwt.sign({customerId:id},privateKey,{ expiresIn: "12h"})
+  
+      console.log(token);
+      customer.accessToken=token;
+      console.log(customer)
+     // await sendEmail(customer.email, token);
+      return customer
+      
+    
+    }
+
 
 }
 

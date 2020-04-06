@@ -7,10 +7,8 @@ const productSchema = new Schema(
 		description: { type: String, trim: true, required: true },
 		price: { type: Object, required: true },
 		category: { type: Schema.Types.ObjectId, ref: 'category' },
-		discountedPrice: { type: Number, default: 0 },
 		storeStaff: { type: Schema.Types.ObjectId, ref: 'storeStaff' },
 		stockAvailable: { type: Boolean, default: true },
-		timesSold: { type: Number, default: 0 },
 		quantities: { type: [String], required: true },
 		distributor: { type: String },
 		photos: { type: [String], required: true }
@@ -26,11 +24,7 @@ productSchema.methods = {
 	}
 }
 
-productSchema.index({ name: 'text' })
-productSchema.pre('remove', async function (next) {
-	await Review.deleteMany({ product: this._id })
-	next()
-})
+
 
 const Product = mongoose.model('product', productSchema)
 module.exports = Product

@@ -1,5 +1,9 @@
 
 var Customer = require("../models/Customer");
+var jwt = require('jsonwebtoken');
+var passwords = require('../passwords/passwords');
+
+var privateKey = passwords.privateKey;
 
 module.exports = {
   async registerCustomer(req, res) {
@@ -16,7 +20,9 @@ module.exports = {
         password,
         isThirdPartyUser: false
       });
-      const newCustomer = await customer.generateAuthToken();
+      const { gmailUser, gmailPass } = process.env;
+      console.log(gmailUser,gmailPass)
+      const newCustomer = await customer.generateAuthTokenConfirmation();
       await newCustomer.save();
       res.status(200).json({status:200,message:`${newCustomer.name} register successfully`,customer:newCustomer});
     } catch (err) {
@@ -44,6 +50,7 @@ module.exports = {
       return res.status(400).send("Incorrect credentials");
     try {
       const customer = await Customer.findByEmailAndPassword(email, password);
+      if(customer.mailConfirmed){
       const newCustomer = await customer.generateAuthToken();
       const customerId = newCustomer.id;
       await Customer.updateOne(
@@ -53,7 +60,12 @@ module.exports = {
       )
       console.log(newCustomer)
       return res.status(201).json({status:200,message:`${newCustomer.name} Welcome Back`,customer:newCustomer});
-
+      }
+      else{
+        return res
+        .status(403)
+        .send("You havent confirmed your account. Please check your mail");
+      }
     } catch (err) {
       console.log(err.message);
       res.send(err.message);
@@ -114,5 +126,62 @@ module.exports = {
     res.redirect("http://localhost:1234/");
   },
 
+  CustomerCangePassword: async (req, res) => {
+    const oldPassword = req.body.oldPassword
+    const  newPassword  = req.body.newPassword
+    const  customerId= req.customer.id
+    if (oldPassword === newPassword)
+      return res.status(400).send({
+        statusCode: 400,
+        message: 'Old Password and New Password should not be same '
+      })
+    try {
+      const customer = await User.findById(customerId)
+      const isMatched = await bcrypt.compare(oldPassword, customer.password)
+      if (!isMatched)
+        return res.status(401).send({
+          statusCode: 401,
+          message: 'Incorrect old password '
+        })
+      customer.password = newPassword;
+      await customer.save();
+      res
+        .status(202)
+        .send({ statusCode: 202, message: 'Password  successfully changed' })
+    } catch (err) {
+      res.status(500).send({ statusCode: 500, message: 'Server Error' })
+    }
+  },
+  async renderConfirmEmail(req, res) {
+    const  confirmToken  = req.params.confirmToken;
+    try {
+      
+      const customer = await Customer.findOne({ accessToken:confirmToken } );
+      if (!customer) {
+        return res.status(401).send("Invalid Credentials");
+      }
+      req.customer = customer;
+      const payload = await jwt.verify(confirmToken, privateKey);
+      console.log(payload);
+      if (payload) {
+       req.customer.mailConfirmed=true
+        await Customer.updateOne(
+          { _id: customer._id },
+          { $set: req.customer },
+          { new: true }
+        )
+        req.customer = undefined;
+        return res.status(200).send("your email confirmed, welcome ")
+      }
+    } catch (err) {
+      console.log(err);
+      if (err.name === "TokenExpiredError") {
+      await  req.customer.generateAuthToken();
+           await req.customer.save();
+        return res.status(202).send("your confirmation token is expired......and now we are automatically regenerateing confirmation email because we are not allowed to use client-side plz check your mail ");
+      }
+      console.log(err.message);
+    }
+  }
 
 };

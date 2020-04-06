@@ -15,6 +15,8 @@ const storeStaffRoutes = require("./routes/storeStaffRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const couponRoutes = require("./routes/couponRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 app.use(express.json());
@@ -38,6 +40,8 @@ app.use(storeStaffRoutes);
 app.use(categoryRoutes);
 app.use(productRoutes);
 app.use(cartRoutes);
+app.use(couponRoutes);
+app.use(orderRoutes);
 
 app.get("/", function (req, res) {
   res.status(200).send("welcome")

@@ -97,7 +97,30 @@ module.exports = {
       res.send(err.message);
     }
 
-  }
+  },
+  //admin's routes  
+  async getAllStoreStaff(req, res) {
+        try {
+          const storeStaff = await StoreStaff.findOne({});
+         //console.log(storeStaff)
+          res.status(200).json({allstoreStaff:storeStaff});
+        } catch (err) {
+          console.log(err);
+          res.send(err.message);
+        }
+      },
+  async deleteStoreStaff(req, res) {
+        try {
+          const storeStaffId=req.params.storeStaffId
+          const storeStaff = await StoreStaff.findOne({storeStaffId});
+         //console.log(storeStaff)
+         await storeStaff.remove();
+          res.status(200).json({allstoreStaff:storeStaff});
+        } catch (err) {
+          console.log(err);
+          res.send(err.message);
+        }
+      },
   
  
 
